@@ -1,9 +1,10 @@
 package com.thoughtworks.collection;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 public class MyMap {
 
@@ -17,22 +18,48 @@ public class MyMap {
     }
 
     public List<Integer> getTriple() {
-        throw new NotImplementedException();
+        return array.stream().map(i -> 3 * i).collect(Collectors.toList());
     }
 
     public List<String> mapLetter() {
-        throw new NotImplementedException();
+        return array.stream().map(i -> String.valueOf(mapIntToChar(i))).collect(Collectors.toList());
+    }
+
+    private char mapIntToChar(Integer i) {
+        return (char) (i + 'a' - 1);
+    }
+
+    private String mapIntToCharTable(Integer i) {
+        if (i <= 26) {
+            return String.valueOf(mapIntToChar(i));
+        }
+
+        return String.valueOf(mapIntToChar(getTableCount(i))) + mapIntToChar(getTableLeft(i));
+    }
+
+    private int getTableLeft(Integer i) {
+        if (i % 26 == 0) {
+            return 26;
+        }
+        return i % 26;
+    }
+
+    private int getTableCount(Integer i) {
+        if (i % 26 == 0) {
+            return i / 26 - 1;
+        }
+        return i / 26;
     }
 
     public List<String> mapLetters() {
-        throw new NotImplementedException();
+        return array.stream().map(this::mapIntToCharTable).collect(Collectors.toList());
     }
 
     public List<Integer> sortFromBig() {
-        throw new NotImplementedException();
+        return array.stream().sorted(Comparator.reverseOrder()).collect(Collectors.toList());
     }
 
     public List<Integer> sortFromSmall() {
-        throw new NotImplementedException();
+        return array.stream().sorted().collect(Collectors.toList());
     }
 }

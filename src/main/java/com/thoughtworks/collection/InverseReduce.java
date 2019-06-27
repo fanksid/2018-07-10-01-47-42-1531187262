@@ -1,21 +1,31 @@
 package com.thoughtworks.collection;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.IntStream;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
-public class InverseReduce {
+class InverseReduce {
 
     private Random random = new Random();
 
-    public InverseReduce() {}
+    InverseReduce() {
+    }
 
-    public InverseReduce(Random random) {
+    InverseReduce(Random random) {
         this.random = random;
     }
 
-    public List<Integer> divideToSmaller(int number) {
-        throw new NotImplementedException();
+    List<Integer> divideToSmaller(int number) {
+        int span = random.nextInt(3);
+        List<Integer> result = new ArrayList<>();
+        while (number >= 2) {
+            result.add(number - 2);
+            number = number - span;
+        }
+
+        return result;
     }
 }

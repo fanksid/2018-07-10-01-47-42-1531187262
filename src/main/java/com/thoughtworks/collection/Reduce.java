@@ -1,54 +1,100 @@
 package com.thoughtworks.collection;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
+import org.apache.commons.collections.CollectionUtils;
 
-public class Reduce {
+class Reduce {
 
     List<Integer> arrayList;
 
-    public Reduce(List<Integer> arrayList) {
+    Reduce(List<Integer> arrayList) {
         this.arrayList = arrayList;
     }
 
-    public int getMaximum() {
-        throw new NotImplementedException();
+    int getMaximum() {
+        validateArrayList();
+        return arrayList.stream().mapToInt(i -> i).max().getAsInt();
     }
 
-    public double getMinimum() {
-        throw new NotImplementedException();
+    private void validateArrayList() {
+        if (CollectionUtils.isEmpty(arrayList)) {
+            throw new NoSuchElementException();
+        }
     }
 
-    public double getAverage() {
-        throw new NotImplementedException();
+    double getMinimum() {
+        validateArrayList();
+        return arrayList.stream().mapToInt(i -> i).min().getAsInt();
     }
 
-    public double getOrderedMedian() {
-        throw new NotImplementedException();
+    double getAverage() {
+        validateArrayList();
+        return arrayList.stream().mapToInt(i -> i).average().getAsDouble();
     }
 
-    public int getFirstEven() {
-        throw new NotImplementedException();
+    double getOrderedMedian() {
+        validateArrayList();
+
+        arrayList = arrayList.stream().sorted().collect(Collectors.toList());
+
+        return getMedianForList(arrayList);
+
     }
 
-    public int getIndexOfFirstEven() {
-        throw new NotImplementedException();
+    private double getMedianForList(List<Integer> arrayList) {
+        validateArrayList();
+        int size = arrayList.size();
+        if (isEvenNumber(size)) {
+            return (arrayList.get(size / 2) + arrayList.get(size / 2 - 1)) / 2.0;
+        }
+        return arrayList.get(size / 2);
     }
 
-    public boolean isEqual(List<Integer> arrayList) {
-        throw new NotImplementedException();
+    int getFirstEven() {
+        validateArrayList();
+        return arrayList.stream().filter(this::isEvenNumber).findFirst().get();
     }
 
-    public Double getMedianInLinkList(SingleLink singleLink) {
-        throw new NotImplementedException();
+    private boolean isEvenNumber(Integer number) {
+        return number % 2 == 0;
     }
 
-    public int getLastOdd() {
-        throw new NotImplementedException();
+    private boolean isOddNumber(Integer number) {
+        return number % 2 != 0;
     }
 
-    public int getIndexOfLastOdd() {
-        throw new NotImplementedException();
+    int getIndexOfFirstEven() {
+        int firstEven = getFirstEven();
+
+        return arrayList.indexOf(firstEven);
+    }
+
+    boolean isEqual(List<Integer> arrayList) {
+        return CollectionUtils.isEqualCollection(arrayList, this.arrayList);
+    }
+
+    Double getMedianInLinkList(SingleLink singleLink) {
+        validateArrayList();
+        arrayList.forEach(singleLink::addTailPointer);
+
+        int size = arrayList.size();
+        if (isEvenNumber(size)) {
+            return ((Integer) singleLink.getNode(size / 2) + (Integer) singleLink.getNode(size / 2 + 1)) / 2.0;
+        }
+        return 1.0 * (Integer) singleLink.getNode(size / 2 + 1);
+
+    }
+
+    int getLastOdd() {
+        validateArrayList();
+        return arrayList.stream().sorted((o1, o2) -> -1).filter(this::isOddNumber).findFirst().get();
+    }
+
+    int getIndexOfLastOdd() {
+        int lastOdd = getLastOdd();
+
+        return arrayList.indexOf(lastOdd);
     }
 }
